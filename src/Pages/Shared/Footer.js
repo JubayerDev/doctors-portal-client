@@ -30,7 +30,7 @@ const Footer = () => {
                 </div>
             </div>
             <div>
-                <p className='mt-5 text-secondary font-semibold text-center'>Copyright © 2022 - All right reserved by Doctors Portal</p>
+                <p className='mt-5 text-secondary font-semibold text-center'>Copyright © 2022 - All right reserved</p>
             </div>
         </footer>
     );
