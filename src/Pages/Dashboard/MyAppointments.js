@@ -1,3 +1,4 @@
+import { signOut } from 'firebase/auth';
 import { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useNavigate } from 'react-router-dom';
@@ -9,7 +10,7 @@ const MyAppointments = () => {
     const navigate = useNavigate()
     useEffect(() => {
         if (user) {
-            fetch(`https://desolate-coast-52819.herokuapp.com/booking?patient=${user?.email}`, {
+            fetch(`http://localhost:5000/booking?patient=${user?.email}`, {
                 method: 'GET',
                 headers: {
                     'authorization': `Bearer ${localStorage.getItem('accessToken')}`
@@ -17,9 +18,11 @@ const MyAppointments = () => {
             })
                 .then(res => {
                     if (res.status === 401 || res.status === 403) {
+                        signOut(auth);
+                        localStorage.removeItem('accessToken')
                         navigate('/')
                     }
-                   return res.json()
+                    return res.json()
                 })
                 .then(data => {
                     console.log(data);
@@ -29,8 +32,8 @@ const MyAppointments = () => {
     }, [user])
     return (
         <div>
-            <div class="overflow-x-auto mt-10">
-                <table class="table w-4/5">
+            <div className="overflow-x-auto mt-10">
+                <table className="table w-4/5">
 
                     <thead>
                         <tr>
@@ -43,12 +46,12 @@ const MyAppointments = () => {
                     </thead>
                     <tbody>
                         {
-                            appointments.map((ap, index) => <tr>
-                                <th>{ index + 1}</th>
+                            appointments.map((ap, index) => <tr key={index}>
+                                <th>{index + 1}</th>
                                 <td>{ap.patientName}</td>
-                                <td>{ ap.date}</td>
-                                <td>{ ap.slot}</td>
-                                <td>{ ap.treatment}</td>
+                                <td>{ap.date}</td>
+                                <td>{ap.slot}</td>
+                                <td>{ap.treatment}</td>
                             </tr>)
 
                         }

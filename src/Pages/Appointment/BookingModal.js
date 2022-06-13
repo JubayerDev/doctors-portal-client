@@ -73,11 +73,10 @@
 // export default BookingModal;
 
 
-import React from 'react';
 import { format } from 'date-fns';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import auth from '../../firebase.init';
 import { toast } from 'react-toastify';
+import auth from '../../firebase.init';
 
 const BookingModal = ({ date, treatment, setTreatment, refetch }) => {
     const { _id, name, slots } = treatment;
@@ -97,7 +96,7 @@ const BookingModal = ({ date, treatment, setTreatment, refetch }) => {
             phone: event.target.phone.value
         }
 
-        fetch('https://desolate-coast-52819.herokuapp.com/booking', {
+        fetch('http://localhost:5000/booking', {
             method: 'POST',
             headers: {
                 'content-type': 'application/json'
@@ -106,10 +105,10 @@ const BookingModal = ({ date, treatment, setTreatment, refetch }) => {
         })
             .then(res => res.json())
             .then(data => {
-                if(data.success){
+                if (data.success) {
                     toast(`Appointment is set, ${formattedDate} at ${slot}`)
                 }
-                else{
+                else {
                     toast.error(`Already have and appointment on ${data.booking?.date} at ${data.booking?.slot}`)
                 }
                 setTreatment(null);

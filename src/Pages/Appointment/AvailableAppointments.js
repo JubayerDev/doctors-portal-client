@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useQuery } from 'react-query';
 import Loading from '../Shared/Loading';
 import BookingModal from './BookingModal';
@@ -9,10 +9,10 @@ const AvailableAppointments = ({ date }) => {
     const [treatment, setTreatment] = useState(null);
 
     const formattedDate = format(date, 'PP');
-    const { data: services, isLoading, refetch } = useQuery(['available', formattedDate], () => fetch(`https://desolate-coast-52819.herokuapp.com/available?date=${formattedDate}`)
+    const { data: services, isLoading, refetch } = useQuery(['available', formattedDate], () => fetch(`http://localhost:5000/available?date=${formattedDate}`)
         .then(res => res.json()))
 
-    if(isLoading){
+    if (isLoading) {
         return <Loading></Loading>
     }
 
@@ -32,7 +32,7 @@ const AvailableAppointments = ({ date }) => {
                 date={date}
                 treatment={treatment}
                 setTreatment={setTreatment}
-                refetch = {refetch}
+                refetch={refetch}
             ></BookingModal>}
         </div>
     );
