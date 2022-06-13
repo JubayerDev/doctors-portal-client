@@ -1,9 +1,9 @@
-import React from 'react';
 import { useEffect } from 'react';
 import { useSignInWithEmailAndPassword, useSignInWithGoogle } from 'react-firebase-hooks/auth';
 import { useForm } from "react-hook-form";
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import auth from '../../firebase.init';
+import useToken from '../../hooks/useToken';
 import Loading from '../Shared/Loading';
 
 const Login = () => {
@@ -15,25 +15,27 @@ const Login = () => {
         loading,
         error,
     ] = useSignInWithEmailAndPassword(auth);
-    
+
+    const [token] = useToken(user || gUser)
+
     let signInError;
     let navigate = useNavigate();
     let location = useLocation();
     let from = location.state?.from?.pathname || '/'
 
     useEffect(() => {
-        if (user || gUser) {
-            navigate(from, {replace: true})
+        if (token) {
+            navigate(from, { replace: true })
         }
-    },[user, gUser, from, navigate])
+    }, [token, from, navigate])
 
     if (loading || gLoading) {
-          return <Loading />
+        return <Loading />
     }
     if (error || gError) {
-        signInError = <p className='text-xs text-red-600 mb-[10px]'>{error?.message || gError?.message }</p>
+        signInError = <p className='text-xs text-red-600 mb-[10px]'>{error?.message || gError?.message}</p>
     }
-    
+
 
     const onSubmit = data => {
         console.log(data);
@@ -61,9 +63,9 @@ const Login = () => {
                                 }
                             })} />
                             <label className="label">
-                                {errors.email?.type === 'required' && <span className="label-text-alt text-red-700">{ errors.email.message}</span>}
-                                {errors.email?.type === 'pattern' && <span className="label-text-alt text-red-700">{ errors.email.message}</span>}
-                                
+                                {errors.email?.type === 'required' && <span className="label-text-alt text-red-700">{errors.email.message}</span>}
+                                {errors.email?.type === 'pattern' && <span className="label-text-alt text-red-700">{errors.email.message}</span>}
+
                             </label>
                         </div>
 
@@ -82,9 +84,9 @@ const Login = () => {
                                 }
                             })} />
                             <label className="label">
-                                {errors.password?.type === 'required' && <span className="label-text-alt text-red-700">{ errors.password.message}</span>}
-                                {errors.password?.type === 'minLength' && <span className="label-text-alt text-red-700">{ errors.password.message}</span>}
-                                
+                                {errors.password?.type === 'required' && <span className="label-text-alt text-red-700">{errors.password.message}</span>}
+                                {errors.password?.type === 'minLength' && <span className="label-text-alt text-red-700">{errors.password.message}</span>}
+
                             </label>
                         </div>
                         {signInError}
