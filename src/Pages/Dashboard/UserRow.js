@@ -10,19 +10,25 @@ const UserRow = ({ user, index, refetch }) => {
                 authorization: `Bearer ${localStorage.getItem('accessToken')}`
             }
         })
-            .then(res => res.json())
+            .then(res => {
+                if (res.status === 403) {
+                    toast.error('Failed to Make an Admin')
+                }
+                return res.json();
+            })
             .then(data => {
-                console.log(data);
-                refetch()
-                toast.success('Successfully Made an Admin')
+                if (data.modifiedCount > 0) {
+                    refetch()
+                    toast.success('Successfully Made an Admin')
+                }
             })
     }
 
     return (
         <tr>
-            <th>{ index + 1}</th>
-            <td>{ email}</td>
-            <td>{role !== 'admin' ? <button onClick={makeAdmin} className="btn btn-xs">Make Admin</button> : 
+            <th>{index + 1}</th>
+            <td>{email}</td>
+            <td>{role !== 'admin' ? <button onClick={makeAdmin} className="btn btn-xs">Make Admin</button> :
                 <button className="btn btn-xs btn-primary">Already an Admin</button>
             }</td>
             <td><button className="btn btn-xs">Remove User</button></td>
