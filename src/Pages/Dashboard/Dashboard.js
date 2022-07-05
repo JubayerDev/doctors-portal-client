@@ -4,7 +4,7 @@ import auth from '../../firebase.init'
 import {useAuthState} from 'react-firebase-hooks/auth'
 
 const Dashboard = () => {
-    const user = useAuthState(auth)
+    const [user] = useAuthState(auth)
     const [admin] = useAdmin(user)
     return (
         <div className="drawer drawer-mobile">
